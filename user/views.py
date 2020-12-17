@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.template import loader
+from rest_framework import viewsets, generics
 
 from .models import User
+from .serializers import UserSerializer, UserListSerializer
+
+    
 
 # Create your views here.
 def userById(request, id):
@@ -19,3 +23,14 @@ def users(request):
     context = {'users': users,}
     return HttpResponse(template.render(context, request))
 
+
+class UserViewSet(viewsets.ModelViewSet):    
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class ListUser(generics.ListAPIView):
+    def get_queryset(self):
+        queryset = User.objects.all()
+        return queryset
+    serializer_class = UserListSerializer
